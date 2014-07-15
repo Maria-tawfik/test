@@ -43,10 +43,10 @@ RSpec.describe "Blogs", :type => :request do
    describe "About page" do
   	   it "About Us" do
 
-  		   visit users_path
+  		   visit about_path
   		   #expect(page).to have_title "Demo | About Us"
   		   page.should have_selector('h1','About Us')
-  		  expect(page).to have_title('Demo | About US')
+  		  expect(page).to have_title('About Us')
   	    end
 
   end

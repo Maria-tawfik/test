@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.1'
 # Use sqlite3 as the database for Active Record
   gem 'bootstrap-sass'
+  gem 'bcrypt' 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'
   gem "factory_girl_rails", "~> 4.0"
@@ -12,6 +13,7 @@ group :development, :test do
   gem 'simplecov', '~> 0.7.1'
   gem 'faker'
   gem 'sqlite3'
+
 
 end
 group :production do

@@ -13,12 +13,13 @@ RSpec.describe "Users", :type => :request do
     
   	   it "should have  title" do
 
-  		   visit users_path
-  		   expect(page).to have_title('Demo | Sign up')
+  		   visit signup_path
+  		   expect(page).to have_title('Sign up')
   		   page.should have_selector('h1','Sign up')
   	     end
         
 
      end
  end
+ 
 end
