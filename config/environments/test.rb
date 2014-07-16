@@ -36,4 +36,12 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+
+
+  # speed up tests by lowering BCrypt's cost function
+  #require 'bcryt'
+  #silence_warnings do
+   # BCrypt::Engine::DEFAU_COST = BCrypt::Engine::MIN_COST
+  #end
 end

@@ -36,73 +36,78 @@ RSpec.describe User, :type => :model do
     it {should_not be_valid}
 	end
 
-        	 describe "when name is too long" do 
-	        	before { @user.name="a" * 51 }
-                it {should_not be_valid}
-             end
+    describe "when name is too long" do 
+	before { @user.name="a" * 51 }
+    it {should_not be_valid}
+    end
 
 
 
 
-           describe "when email taken" do
-             it "should be invalid" do
-                  addresses = %w[user@example,com user_at_foo.org example.user@example.]
-                    addresses.each do |i|
-        	           @user.email = i
-                         	@user.should_not be_valid
+    describe "when email taken" do
+    it "should be invalid" do
+    addresses = %w[user@example,com user_at_foo.org example.user@example.]
+    addresses.each do |i|
+    @user.email = i
+    @user.should_not be_valid
        
-                      end
-                end
-             end
+    end
+    end
+    end
 
-             describe "when email is unique" do
-             	before do
-             		user_with_same_email =@user.dup
-             		user_with_same_email.email =@user.email.downcase
-             		user_with_same_email.save
-             	end
-             	it { should_not be_valid }
-
-             end
-             describe "when password is blank" do
-             	before { @user.password = @user.password_confirmation= " " }
-             	it {should_not be_valid}
-            end
-             describe "when it is not matching" do
-            	before { @user.password_confirmation="mismatch" }
-            	it {should_not be_valid}
-            end
+    describe "when email is unique" do
+    before do
+    user_with_same_email =@user.dup
+    user_with_same_email.email =@user.email.downcase
+    user_with_same_email.save
+    end
+        it { should_not be_valid }
+    end
 
 
-       describe "when password_confirmation is nil" do
-            	before { @user.password_confirmation= nil }
-            	it {should_not be_valid}
-           end
+
+    describe "when password is blank" do
+  	before { @user.password = @user.password_confirmation= " " }
+    it {should_not be_valid}
+    end
+
+
+    describe "when it is not matching" do
+ 	before { @user.password_confirmation="mismatch" }
+    it {should_not be_valid}
+    end
+
+
+    describe "when password_confirmation is nil" do
+    before { @user.password_confirmation= nil }
+    it {should_not be_valid}
+    end
 
            
-                    describe "when password is too short" do
-                before { @user.password=@user.password_confirmation ="a"*7 }
-                it {should_not be_valid}
-           end
+    describe "when password is too short" do
+    before { @user.password=@user.password_confirmation ="a"*7 }
+    it {should_not be_valid}
+     end
 
-                     describe"return value of authenticate method" do
-                        before { @user.save }
-                        let(:found_user) { User.find_by_email(@user.email)}
+    describe"return value of authenticate method" do
+    before { @user.save }
+    let(:found_user) { User.find_by_email(@user.email)}
                     
-
-                    describe"with valid password" do
-                        it{ should == found_user.authenticate(@user.password)}
-                     end
+       describe"with valid password" do
+        it{ should == found_user.authenticate(@user.password)}
+        end
                      
-                     describe "with invalid password " do
-                     let(:user_for_invalid_password) {found_user.authenticate("invalid")}   
+         describe "with invalid password " do
+         let(:user_for_invalid_password) {found_user.authenticate("invalid")}   
 
-                     it{ should_not== user_for_invalid_password}
-                     specify {expect(user_for_invalid_password).to be_falsey}
-                    end
-                 end
+         it{ should_not== user_for_invalid_password}
+         specify {expect(user_for_invalid_password).to be_falsey}
+          end
+                
+     end
 
- 
+   
 
+end
 end
 end

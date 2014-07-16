@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+resources :users
 
   root 'blogs#home'
 
@@ -7,9 +8,11 @@ Rails.application.routes.draw do
 
   get'/home' => 'blogs#home'
 get'/users' => 'users#new'
+get'/contact' => 'blogs#contact'
 
   get'/new' => 'users#new'
   get '/signup' =>'users#new'
+  post '/sendemail'=>'blogs#sendemail'
 
 
   # The priority is based upon order of creation: first created -> highest priority.

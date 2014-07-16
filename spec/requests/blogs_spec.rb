@@ -13,7 +13,7 @@ RSpec.describe "Blogs", :type => :request do
 
   	   it "Hello, world!" do
 
-  		   visit users_path
+  		   visit root_path
   		   expect(page).to have_title('')
   		   page.should have_selector('h1','Hello, world!')
   	    end
