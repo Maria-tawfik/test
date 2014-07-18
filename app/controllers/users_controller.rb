@@ -10,11 +10,11 @@ class UsersController < ApplicationController
     if @user.save
 
       redirect_to @user
-       flash[:success] = "User successfully created"
+       flash[:notice] = "User successfully created"
     else
   	render 'new'
     end
-  end
+   end
 
 
   private

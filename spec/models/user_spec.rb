@@ -19,6 +19,7 @@ RSpec.describe User, :type => :model do
  it { should respond_to(:password_digest) }
  it { should respond_to(:password) }
  it { should respond_to(:password_confirmation) }
+ it { should respond_to(:remember_token) }
 
 #	before { @user.name= " " }
 #    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
@@ -106,7 +107,10 @@ RSpec.describe User, :type => :model do
                 
      end
 
+     describe"remember token" do 
+        before { @user.save }
+        it (:remember_token) {should_not be_blank}
+      end
    
-
-end
+   end
 end

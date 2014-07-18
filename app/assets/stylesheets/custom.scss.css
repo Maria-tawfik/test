@@ -35,10 +35,3 @@ aside {
 	float:left;
 	margin-right: 10px;
 }
-input ,textarea ,select , .uneditable-input {
-	border: 1px solid #bbb;
-	width: 100%;
-	height: auto;
-	margin-bottom: 80px;
-	
-}

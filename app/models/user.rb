@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
 
 has_secure_password
-
-before_save{ |user| user.email = user.email.downcase }
+   before_save{ |user| user.email = user.email.downcase }
+   before_save{ |user| user.remember_token = SecureRandom.urlsafe_base64}
 before_validation do |user|
 	  o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
 	 user.name = (0...50).map { o[rand(o.length)] }.join if !user.name or  user.name.blank?
