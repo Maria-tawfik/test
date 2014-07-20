@@ -59,8 +59,8 @@ end
       before { click_button submit}
       let(:user) {User.find_by_email("user@example.com")}
     it  { expect(page).to have_title(user.name)}
-    it { should have_selector('div.alert.alert-success', text: 'Welcome')}
-    it { should have_link('Sign out')}
+    it { should have_selector('div.alert.alert-success', text: 'User successfully created')}
+    it { save_and_open_page ;should have_link('Sign out')}
 end 
 end
 end

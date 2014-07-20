@@ -19,20 +19,22 @@ RSpec.describe "AuthenticationPages", :type => :request do
                click_button "Sign in"
 		    end
 		     it {expect(page).to have_title(user.name)}
-		     it {should have_link 'profile', herf: user_path(user)}
-		     it {should have_link 'sign out', herf: root_path}
-		     it {should_not have_link 'sign in', herf: signin_path}
+		     it {should have_link 'profile', href: user_path(user)}
+		     it {should have_link 'Sign out'}
+		     it {should_not have_css ("form.signin")}
+
+             describe "after visiting another page"  do
+                before {click_link "About Us"}
+                it { should_not have_selector ('div.alert.alert-danger')}
+            end
+
+            describe "followed by signout" do
+              before { click_link "Sign out"}
+               it {should have_css ("form.signin")}
+            end
         end
 
-	    describe "after visiting another page"  do
-	    	before {click_link "About Us"}
-	    	it { should_not have_selector ('div.alert.alert-danger')}
-	    end
-
-	    describe "followed by signout" do
-	      before { click_link "sign out"}
-	      it { should have_link('sign in')}
-	     end
+	    
 
 	end
 end
