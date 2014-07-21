@@ -23,7 +23,7 @@ resources :sessions, only: [:create, :destroy]
   get '/new' => 'users#new'
   get '/signup' =>'users#new'
   get '/signin' =>'sessions#new' 
-  get '/sendemail'=>'blogs#sendemail'
+  post '/sendemail'=>'blogs#sendemail'
 
 
   # The priority is based upon order of creation: first created -> highest priority.
