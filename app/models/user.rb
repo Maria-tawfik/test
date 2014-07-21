@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
 has_secure_password
+has_many :posts, dependent: :destroy
    before_save{ |user| user.email = user.email.downcase }
    before_save{ |user| user.remember_token = SecureRandom.urlsafe_base64}
 before_validation do |user|

@@ -65,11 +65,18 @@ RSpec.describe "Users", :type => :request do
 
   describe "profile page" do
       let (:user) {FactoryGirl.create(:user)}
+      let!(:m1) {FactoryGirl.create(:post, user: user, content: "maria")}
+      let!(:m2) {FactoryGirl.create(:post, user: user, content: "samy")}
       before {visit user_path(user.id)}
       it {should have_selector('h1', text: user.name)}
       it "should have correct title" do
         expect(page).to have_title(user.name)
       end
+      describe "post" do
+          it{should have_content(m1.content)}
+          it{should have_content(m2.content)} 
+          it{should have_content(user.posts.count)}
+        end
   end
 
   describe "sign up page" do
@@ -109,6 +116,7 @@ RSpec.describe "Users", :type => :request do
       end
     end
   end
+
   
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
@@ -148,8 +156,7 @@ RSpec.describe "Users", :type => :request do
       it { should have_link('Sign out', href: signout_path)}
       it { should have_selector('div.alert.alert-success')}
       specify { user.reload.email.should==new_email}
-      specify { user.reload.name.should==new_name}
-    
+      specify { user.reload.name.should==new_name}  
     end
   end
 

@@ -102,23 +102,33 @@ it {should be_valid}
     before { @user.save }
     let(:found_user) { User.find_by_email(@user.email)}
                     
-       describe"with valid password" do
+      describe"with valid password" do
         it{ should == found_user.authenticate(@user.password)}
-        end
-                     
-         describe "with invalid password " do
-         let(:user_for_invalid_password) {found_user.authenticate("invalid")}   
-
-         it{ should_not== user_for_invalid_password}
-         specify {expect(user_for_invalid_password).to be_falsey}
-          end
-                
-     end
-
-     describe"remember token" do 
-        before { @user.save }
-        it (:remember_token) {should_not be_blank}
       end
-   
-   end
+                     
+      describe "with invalid password " do
+        let(:user_for_invalid_password) {found_user.authenticate("invalid")}   
+        it{ should_not== user_for_invalid_password}
+        specify {expect(user_for_invalid_password).to be_falsey}
+      end
+    end
+
+    describe"remember token" do 
+      before { @user.save }
+      it (:remember_token) {should_not be_blank}
+    end
+
+    describe "post association" do
+      before {@user.save}
+      let!(:older_post) do
+       FactoryGirl.create(:post, user: @user, created_at: 1.day.ago)
+      end
+      let!(:newer_post) do
+        FactoryGirl.create(:post, user: @user, created_at: 1.hour.ago)
+      end
+      it "should have the right post in the right order" do
+        @user.posts.should==[newer_post, older_post]
+      end
+    end
+  end
 end

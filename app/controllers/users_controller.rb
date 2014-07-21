@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :signed_in_user, only: [:index, :edit, :update]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :destry]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
   def index
@@ -12,6 +12,7 @@ class UsersController < ApplicationController
 
   def show
   	@user=User.find(params[:id])
+    @posts=@user.posts.paginate(page: params[:page])
   end
 
   def create 
@@ -36,7 +37,7 @@ class UsersController < ApplicationController
   
 
   def update
-    @user=User.find(params[:id])
+    #@user=User.find(params[:id])
     if @user.update_attributes(user_params) 
       sign_in @user
       flash[:notice] = "User successfully updated "
@@ -55,13 +56,7 @@ class UsersController < ApplicationController
 #howa shalha 
  
 
-  def signed_in_user
-    unless  signed_in?
-      store_location
-      redirect_to root_path 
-      flash[:error] ="Please sign in"
-    end
-  end
+
     
   def correct_user
    @user = User.find(params[:id])

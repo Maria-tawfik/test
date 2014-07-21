@@ -81,12 +81,27 @@ RSpec.describe "AuthenticationPages", :type => :request do
     		      before {put user_path(user)}
     		      specify{response.should redirect_to(root_path)}
     	        end 
+
+                describe "submitting to the destroy action" do
+                    before {delete post_path(FactoryGirl.create(:post))}
+                    specify{ response.should redirect_to(root_path)}
+                end
+
     	        describe "visiting the user index" do
     	        	before {visit users_path}
     	        	it{expect(page).to have_title('Demo')}
     	       end
     	   end
         end
+        
+        describe "in the posts control" do
+            describe "submitting to the create action" do
+                before {post posts_path}
+                specify {response.should redirect_to(root_path)}
+            end
+
+        end
+
     	describe "as wrong user" do
     		let(:user) {FactoryGirl.create(:user)}
     		let(:wrong_user) {FactoryGirl.create(:user, email: "wrong@example.com")}
