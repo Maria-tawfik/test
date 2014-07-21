@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "Users", :type => :request do
-  
+  subject {page}
 
   describe "GET /users" do
 
     describe "Users page" do
-  	  subject {page}
+  	  
 
       describe "index" do
         before do
@@ -20,28 +20,48 @@ RSpec.describe "Users", :type => :request do
         end 
         it{expect(page).to have_title('All Users')} 
         it{page.should have_selector('h1','All Users')}
-
-        it "should list each user" do
-          user.all.each.do |user|
-          page.should have_selector('li', text: user.name)
-          
-        end 
+        
+        describe "pagination" do
+          it {should have_selector('div.pagination')}
+           it "should list each user" do  
+            User.all.each do |user|
+             #User.paginate(page:1).each do |user|
+             page.should have_selector('li>a', 'jjj')
+            end
+            end 
+        end
+        describe"delete links" do
+          it {should_not have_link('delete')}
+          describe"as an admin" do
+            let(:admin) {FactoryGirl.create(:admin)}
+            before do
+              click_link "Sign out"
+              sign_in admin
+              visit users_path
+            end
+            it { should have_link('delete', href: user_path(User.first))}
+            it "should be able to delete another user" do
+              expect {click_link('delete', match: :first)}.to change(User, :count).by(-1)
+            end
+            it {should_not have_link('delete',href: user_path(admin))}
+          end
+        end
       end
     end
 
-     it "Sign up" do
+    it "Sign up" do
       visit signup_path
   		page.should have_content ('Sign up')
-  	 end
+  	end
      
-     it "should have  title" do
+    it "should have  title" do
         visit signup_path
   		  expect(page).to have_title('Sign up')
   		  page.should have_selector('h1','Sign up')
-  	  end
-    end
-
+  	 end
   end
+
+  #end
 
   describe "profile page" do
       let (:user) {FactoryGirl.create(:user)}
@@ -57,49 +77,55 @@ RSpec.describe "Users", :type => :request do
     let(:submit) {"Create my account"}
 
     describe "with invalid info" do
-        it "should not create a user" do
-          expect{ click_button  submit }.not_to change(User, :count)
-        end 
+
+      it "should not create a user" do
+        expect{ click_button  submit }.not_to change(User, :count)
+      end 
+    
     end
 
    describe "with valid info" do
+      
       before do
         old_count = User.count
-           within("form#new_user") do
-             fill_in "Name",   with: "Example User"
-             fill_in "Email",   with: "user@example.com"
-             fill_in "Password",   with: "mariasamy"
-             fill_in "Confirmation",   with: "mariasamy"
-            end
+        within("form#new_user") do
+         fill_in "Name",   with: "Example User"
+         fill_in "Email",   with: "user@example.com"
+         fill_in "Password",   with: "mariasamy"
+         fill_in "Confirmation",   with: "mariasamy"
+        end
       end
 
      it "should  create a user" do
        expect{click_button submit}.to change(User, :count).by(1)
-      end 
-     describe "after saving a user" do
-       before { click_button submit} 
-       let(:user) {User.find_by_email("user@example.com")}
-       it  { expect(page).to have_title(user.name)}
-       it { should have_selector('div.alert.alert-success', text: 'Welcome')}
-       it { should have_link('Sign out')}
-      end 
-   end
+      end
+
+      describe "after saving a user" do
+        before { click_button submit}
+        let(:user) {User.find_by_email("user@example.com")}
+        it  { expect(page).to have_title(user.name)}
+        it { should have_selector('div.alert.alert-success', text: 'User successfully created')}
+        it { should have_link('Sign out')}
+      end
+    end
   end
   
   describe "edit" do
     let(:user) { FactoryGirl.create(:user) }
+    
     before do
       sign_in user
-      before {visit edit_user_path(user)}
+     visit edit_user_path(user)
     end
+
     describe "page" do
-      it{ should have_selector ('h1', text: "Update your profile")}
+      it{ should have_selector('h1', text: "Update your profile")}
       it{ expect(page).to have_title('Edit User')} 
-      it{ should have_link('change', herf: 'http://gravatar.com/emails')}
+      it{ should have_link('change', href: 'http://gravatar.com/emails')}
     end
 
     describe "with invalid info" do
-      before { click_button "save changes"}
+      before { click_button "Save changes"}
 
       it { should have_content('error')}
     end
@@ -107,6 +133,7 @@ RSpec.describe "Users", :type => :request do
     describe "with valid info" do
       let(:new_name) {"New Name"}
       let(:new_email) {"new@example.com"}
+    
       before do
         fill_in "Name",   with: new_name
         fill_in "Email",   with: new_email
@@ -114,11 +141,16 @@ RSpec.describe "Users", :type => :request do
         fill_in "Confirm Password",   with: user.password
         click_button "Save changes"
       end
-      it{ expect(page).to have_title(user_name) }
-      it { should have_link('Sign out', herf: signout_path)}
-      it { should have_selector('div.alert.alert-notice')}
+    
+      it "should have correct title" do
+      expect(page).to have_title(new_name) 
+      end
+      it { should have_link('Sign out', href: signout_path)}
+      it { should have_selector('div.alert.alert-success')}
       specify { user.reload.email.should==new_email}
       specify { user.reload.name.should==new_name}
+    
     end
   end
+
 end

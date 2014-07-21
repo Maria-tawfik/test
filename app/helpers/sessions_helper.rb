@@ -31,7 +31,7 @@ module SessionsHelper
 		session[:return_to]= request.fullpath
 	end
 
-	def  redict_back_or(default)
+	def  redirect_back_or(default)
 		redirect_to(session[:return_to]|| default)
 		session.delete(:return_to)
 	end

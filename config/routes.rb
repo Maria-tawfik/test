@@ -19,7 +19,7 @@ resources :sessions, only: [:create, :destroy]
   get '/home' => 'blogs#home'
   get '/users' => 'users#new'
   get '/contact' => 'blogs#contact'
-  match '/signout', to: 'sessions#destroy',  via: :delete
+  delete '/signout'=> 'sessions#destroy'
   get '/new' => 'users#new'
   get '/signup' =>'users#new'
   get '/signin' =>'sessions#new' 
