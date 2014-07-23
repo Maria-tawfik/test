@@ -9,9 +9,10 @@ RSpec.describe Post, :type => :model do
 
     subject { @post }
     
-    it {should respond_to(:content)}
-    it {should respond_to(:user_id)}
+   
     #its(:user) {should == user}
+     it {should respond_to(:content)}
+    it {should respond_to(:user_id)}
     it "s user should equal user" do
     	expect(@post.user).to eq(user)
     end

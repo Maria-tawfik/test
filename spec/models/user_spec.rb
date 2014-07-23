@@ -3,104 +3,94 @@ require 'rails_helper'
 RSpec.describe User, :type => :model do
 
  # pending "add some examples to (or delete) #{__FILE__}"
- describe User do
+  describe User do
 
- before do
-  @user = User.new(name: "hhghj" ,email: "ayhaga@example.com",
-  password:"mariasamy" , password_confirmation:"mariasamy")
-    @user1 = User.new(name: "mariasamyfarid" ,email: "ayhaga@example.com",
-  password:"mariasamy" , password_confirmation:"mariasamy")
-     end
-
- subject { @user }
-
-it { should respond_to(:name) }
-it { should respond_to(:email) }
-it { should respond_to(:admin) }
-it { should respond_to(:password_digest) }
-it { should respond_to(:password) }
-it { should respond_to(:password_confirmation) }
-it { should respond_to(:remember_token) }
-it { should respond_to(:authenticate) }
-
-it {should be_valid}
-it {should be_valid}
-
-
-
-
-#	before { @user.name= " " }
-#    o = [('a'..'z'), ('A'..'Z')].map { |i| i.to_a }.flatten
- #   @user.name= = (0...50).map { o[rand(o.length)] }.join
-#	it { should be_valid }
-#	end
-
-    describe "when name is not present" do
-    before { @user.name= " " }
-    it { should_not be_valid }
+    before do
+      @user = User.new(name: "hhghj" ,email: "ayhaga@example.com",
+      password:"mariasamy" , password_confirmation:"mariasamy")
+      @user1 = User.new(name: "mariasamyfarid" ,email: "ayhaga@example.com",
+      password:"mariasamy" , password_confirmation:"mariasamy")
     end
 
-	describe "when email is not present" do
-	before { @user.email= " " }
-    it {should_not be_valid}
-	end
+    subject { @user }
+
+    it { should respond_to(:name) }
+    it { should respond_to(:email) }
+    it { should respond_to(:admin) }
+    it { should respond_to(:password_digest) }
+    it { should respond_to(:password) }
+    it { should respond_to(:password_confirmation) }
+    it { should respond_to(:remember_token) }
+    it { should respond_to(:authenticate) }
+    it { should respond_to(:feed) }
+
+   it {should be_valid}
+   it {should be_valid}
+    describe "when name is not present" do
+     before { @user.name= " " }
+     it { should_not be_valid }
+    end
+
+	  describe "when email is not present" do
+	    before { @user.email= " " }
+      it {should_not be_valid}
+	  end
 
     describe "when name is too long" do 
-	before { @user.name="a" * 51 }
-    it {should_not be_valid}
+	   before { @user.name="a" * 51 }
+     it {should_not be_valid}
     end
 
 
 
 
     describe "when email taken" do
-    it "should be invalid" do
-    addresses = %w[user@example,com user_at_foo.org example.user@example.]
-    addresses.each do |i|
-    @user.email = i
-    @user.should_not be_valid
-       
-    end
-    end
+      it "should be invalid" do
+        addresses = %w[user@example,com user_at_foo.org example.user@example.]
+        addresses.each do |i|
+          @user.email = i
+          @user.should_not be_valid
+        end
+      end
     end
 
     describe "when email is unique" do
-    before do
-    user_with_same_email =@user.dup
-    user_with_same_email.email =@user.email.downcase
-    user_with_same_email.save
-    end
-        it { should_not be_valid }
+      before do
+        user_with_same_email =@user.dup
+        user_with_same_email.email =@user.email.downcase
+        user_with_same_email.save
+      end
+      it { should_not be_valid }
     end
 
 
 
     describe "when password is blank" do
-  	before { @user.password = @user.password_confirmation= " " }
-    it {should_not be_valid}
+    	before { @user.password = @user.password_confirmation= " " }
+     it {should_not be_valid}
     end
 
 
     describe "when it is not matching" do
- 	before { @user.password_confirmation="mismatch" }
-    it {should_not be_valid}
+    	before { @user.password_confirmation="mismatch" }
+     it {should_not be_valid}
     end
 
 
     describe "when password_confirmation is nil" do
-    before { @user.password_confirmation= nil }
-    it {should_not be_valid}
+     before { @user.password_confirmation= nil }
+     it {should_not be_valid}
     end
 
            
     describe "when password is too short" do
-    before { @user.password=@user.password_confirmation ="a"*7 }
-    it {should_not be_valid}
-     end
+      before { @user.password=@user.password_confirmation ="a"*7 }
+      it {should_not be_valid}
+    end
 
     describe"return value of authenticate method" do
-    before { @user.save }
-    let(:found_user) { User.find_by_email(@user.email)}
+      before { @user.save }
+      let(:found_user) { User.find_by_email(@user.email)}
                     
       describe"with valid password" do
         it{ should == found_user.authenticate(@user.password)}
@@ -128,6 +118,36 @@ it {should be_valid}
       end
       it "should have the right post in the right order" do
         @user.posts.should==[newer_post, older_post]
+      end
+
+      it "should destroy associated post" do
+        posts =@user.posts
+        @user.destroy
+
+        posts.each do |post|
+          post.find_by_id(post.id).should be_nil
+        end
+      end
+      
+      describe "status" do
+        let(:unfollowed_post) do
+          FactoryGirl.create(:post, user: FactoryGirl.create(:user))
+        end
+
+
+         it "should have older posts" do
+          expect(@user.feed).to include(older_post)
+         end
+
+         it "should have  newer posts" do
+          expect(@user.feed).to include(newer_post)
+         end
+
+          it "should have older posts" do
+           expect(@user.feed). not_to include(unfollowed_post)
+         end
+
+
       end
     end
   end

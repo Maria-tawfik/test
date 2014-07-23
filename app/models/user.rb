@@ -15,8 +15,11 @@ validates :email, presence: true, format: { with:OPA },uniqueness:{ case_sensiti
 validates :password, presence: true, length:{ minimum: 8}
 validates :password_confirmation, presence: true, length:{minimum: 8}
 
+ def feed
+ 	Post.where("user_id= ?", id)
+ end
 
-		def self.name_longer_than_eight ()
-            usersmorethan8=User.where("length(name)>8")  
-        end
+ def self.name_longer_than_eight ()
+    usersmorethan8=User.where("length(name)>8")  
+ end
 end

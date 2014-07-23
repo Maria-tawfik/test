@@ -29,6 +29,24 @@ RSpec.describe "Blogs", :type => :request do
 
   	    end
 
+        describe "for signed in uers" do
+          let(:user) {FactoryGirl.create(:user)}
+          before do
+            FactoryGirl.create(:post, user: user, content: "lorem ipsum")
+            FactoryGirl.create(:post, user: user, content: "opa check")
+            sign_in user
+            visit root_path
+          end
+          it "should render the user's feed" do
+
+            user.feed.each do |item|
+              page.should have_selector("li##{item.id}", text: item.content)
+            end
+          end
+
+        end
+
+
   end
 
     	  describe "About page" do
@@ -44,7 +62,7 @@ RSpec.describe "Blogs", :type => :request do
   	   it "About Us" do
 
   		   visit about_path
-  		   #expect(page).to have_title "Demo | About Us"
+  		   expect(page).to have_title "Demo | About Us"
   		   page.should have_selector('h1','About Us')
   		  expect(page).to have_title('About Us')
   	    end

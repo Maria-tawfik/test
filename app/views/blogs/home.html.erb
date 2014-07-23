@@ -1,5 +1,20 @@
 <% provide(:title, '')%>
  <!-- Main jumbotron for a primary marketing message or call to action -->
+<% if signed_in? %>
+<div  class="row">
+  <aside class="span4">
+    <section>
+      <%= render 'shared/user_info'%>
+    </section>
+    <section>
+       <%= render 'shared/post_form'%>
+    </section>	
+  </aside>
+  <dic class="span8">
+  	<h3> post Feed</h3>
+  	<%= render 'shared/feed'%>
+</div>
+<% else %>
 <div class="jumbotron">
 <div class="container">
 <h1>Hello, world!</h1>
@@ -28,4 +43,4 @@
 <p>&copy; Company 2014</p>
 </footer>
  </div> <!-- /container -->
-
+<%end%>
