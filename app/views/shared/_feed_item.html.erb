@@ -1,3 +1,4 @@
+<div class="col-sm-7">
 <li id="<%= feed_item.id%>">
 	<%= link_to gravatar_for(feed_item.user), feed_item.user %>
 	<span class="user">
@@ -13,3 +14,4 @@
 	 <%= link_to "edit", edit_post_path(feed_item) , title: feed_item.content %>
 	 <%end%>
 	</li>
+</div>

@@ -2,6 +2,10 @@ class User < ActiveRecord::Base
 
 has_secure_password
 has_many :posts, dependent: :destroy
+has_many :relationships, foreign_key: "follower_id" , dependent: :destroy
+has_many :followed_users, through: :relationships, source: :followed
+has_many :reverse_relationships, foreign_key: "followed_id",class_name:"Relaationship",  dependent: :destroy
+has_many :followers, through: :reverse_relationships, source: :follower
    before_save{ |user| user.email = user.email.downcase }
    before_save{ |user| user.remember_token = SecureRandom.urlsafe_base64}
 before_validation do |user|
@@ -16,10 +20,24 @@ validates :password, presence: true, length:{ minimum: 8}
 validates :password_confirmation, presence: true, length:{minimum: 8}
 
  def feed
- 	Post.where("user_id= ?", id)
+ 	Post.from_users_followed_by(self)
  end
 
  def self.name_longer_than_eight ()
     usersmorethan8=User.where("length(name)>8")  
  end
+
+ def following?(other_user)
+ 	relationships.find_by_followed_id(other_user.id)
+ 	
+ end
+
+  def follow!(other_user)
+ 	relationships.create!(follower_id: other_user.id)
+  end
+  def unfollow!(other_user)
+    relationships.find_by_followed_id(other_user.id).destroy
+  end
+
+
 end
